@@ -16,5 +16,6 @@ jobs:
         with:
           go-version: '1.17'
           check-latest: true
-      - run: cd ./projects/mail-api
+      - run: cd projects
+      - run: cd mail-api
       - run: go run main.go
