@@ -29,10 +29,9 @@ func SendSMS(TargetName string, TargetPhoneNumber string, TextForTarget string) 
 	})
 
 	// Creating Sending Payload for sms-ing your end user.
-	////////////////////////////////////////////////////////////////////////
-	///////////				 NOTE!!!					////////////////////
-	/////////// Please insert your Twilio Phone Number	////////////////////
-	////////////////////////////////////////////////////////////////////////
+	//
+	//			 NOTE!!!					
+	//	   Please insert your Twilio Phone Number	
 	params := &openapi.CreateMessageParams{}
 	params.SetTo(TargetPhoneNumber)
 	params.SetFrom("<Your Twilio Phone Number>")
@@ -90,7 +89,7 @@ func main() {
 	// Create the Go Gin engine instance
 	router := gin.Default()
 
-	// Create a API group
+	// Create an API group
 	API_v1 := router.Group("/api")
 
 	// Provide and REST endpoint
