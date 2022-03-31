@@ -1,0 +1,12 @@
+version: '3.1'
+
+services:
+  go-sms-microservice:
+    ports: 
+    - "8080:8080"
+    build:
+      context: ./GoSmsAPI
+      dockerfile: Dockerfile
+    container_name: go-sms-microservice
+
+    
