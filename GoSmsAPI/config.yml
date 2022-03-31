@@ -1,0 +1,3 @@
+twilioAccountSid: "<Your Twilio AccountSID string>"
+twilioAccountAuthToken: "<Your Twilio Account Auth Token>"
+twilioPhoneNumber: "<Your Twilio Phone Number>"

@@ -2,12 +2,22 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-gonic/gin"
 	"github.com/twilio/twilio-go"
 	openapi "github.com/twilio/twilio-go/rest/api/v2010"
+	"gopkg.in/yaml.v2"
 )
+
+// Configuration struct based on external .yml file
+type Configuration struct {
+	twilioAccountSid       string `yaml:"twilioAccountSid"`
+	twilioAccountAuthToken string `yaml:"twilioAccountAuthToken"`
+	twilioPhoneNumber      string `yaml:"twilioPhoneNumber"`
+}
 
 // Create a struct that represents the JSON Payload that will be sent to the end user
 type TargetForSMS struct {
@@ -18,9 +28,21 @@ type TargetForSMS struct {
 
 func SendSMS(TargetName string, TargetPhoneNumber string, TextForTarget string) {
 
+	// read the config.yml file from the disk into a byte slice
+	yamlBytes, err := os.ReadFile("config.yml")
+	if err != nil {
+		log.Fatal((err))
+	}
+	// parse the YAML stored in the byte slice into the struct
+	config := &Configuration{}
+	err = yaml.Unmarshal(yamlBytes, config)
+	if err != nil {
+		log.Fatal((err))
+	}
+
 	// Your Twilio Account SID and TOKEN
-	accountSid := "<Your Twilio AccountSID string>"
-	authToken := "<Your Twilio Account Auth Token>"
+	accountSid := config.twilioAccountSid
+	authToken := config.twilioAccountAuthToken
 
 	// Create a client instance
 	client := twilio.NewRestClientWithParams(twilio.ClientParams{
@@ -29,12 +51,9 @@ func SendSMS(TargetName string, TargetPhoneNumber string, TextForTarget string) 
 	})
 
 	// Creating Sending Payload for sms-ing your end user.
-	//
-	//			 NOTE!!!					
-	//	   Please insert your Twilio Phone Number	
 	params := &openapi.CreateMessageParams{}
 	params.SetTo(TargetPhoneNumber)
-	params.SetFrom("<Your Twilio Phone Number>")
+	params.SetFrom(config.twilioPhoneNumber)
 	params.SetBody(TextForTarget)
 
 	// Send SMS Payload
