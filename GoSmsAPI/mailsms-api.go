@@ -98,6 +98,6 @@ func main() {
 
 	// Run the Router
 	router.SetTrustedProxies([]string{"127.0.0.1"})
-	router.Run("127.0.0.1:5000")
+	router.Run("127.0.0.1:8080")
 
 }
