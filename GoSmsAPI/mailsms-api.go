@@ -2,22 +2,13 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"os"
 
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/viper"
 	"github.com/twilio/twilio-go"
 	openapi "github.com/twilio/twilio-go/rest/api/v2010"
-	"gopkg.in/yaml.v2"
 )
-
-// Configuration struct based on external .yml file
-type Configuration struct {
-	twilioAccountSid       string `yaml:"twilioAccountSid"`
-	twilioAccountAuthToken string `yaml:"twilioAccountAuthToken"`
-	twilioPhoneNumber      string `yaml:"twilioPhoneNumber"`
-}
 
 // Create a struct that represents the JSON Payload that will be sent to the end user
 type TargetForSMS struct {
@@ -28,21 +19,14 @@ type TargetForSMS struct {
 
 func SendSMS(TargetName string, TargetPhoneNumber string, TextForTarget string) {
 
-	// read the config.yml file from the disk into a byte slice
-	yamlBytes, err := os.ReadFile("config.yml")
-	if err != nil {
-		log.Fatal((err))
-	}
-	// parse the YAML stored in the byte slice into the struct
-	config := &Configuration{}
-	err = yaml.Unmarshal(yamlBytes, config)
-	if err != nil {
-		log.Fatal((err))
-	}
+	// Creating a viper instance
+	viper_ := viper.New()
+	viper_.SetConfigFile("config.yml")
+	viper_.ReadInConfig()
 
 	// Your Twilio Account SID and TOKEN
-	accountSid := config.twilioAccountSid
-	authToken := config.twilioAccountAuthToken
+	accountSid := viper_.GetString("twilioAccountSid")
+	authToken := viper_.GetString("twilioAccountAuthToken")
 
 	// Create a client instance
 	client := twilio.NewRestClientWithParams(twilio.ClientParams{
@@ -53,7 +37,7 @@ func SendSMS(TargetName string, TargetPhoneNumber string, TextForTarget string) 
 	// Creating Sending Payload for sms-ing your end user.
 	params := &openapi.CreateMessageParams{}
 	params.SetTo(TargetPhoneNumber)
-	params.SetFrom(config.twilioPhoneNumber)
+	params.SetFrom(viper_.GetString("twilioPhoneNumber"))
 	params.SetBody(TextForTarget)
 
 	// Send SMS Payload
