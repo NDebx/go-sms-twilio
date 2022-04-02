@@ -79,7 +79,7 @@ func RouterPost(ctx *gin.Context) {
 
 		// Send SMS to client
 		// This function need the required JSON data, that you passed via the REST endpoint. In my case http://127.0.0.1:5000/api/v1/post/send/sms/client
-		SendSMS(IncomingRequest.TargetName, IncomingRequest.TargetPhoneNumber, IncomingRequest.TextForTarget)
+		go SendSMS(IncomingRequest.TargetName, IncomingRequest.TargetPhoneNumber, IncomingRequest.TextForTarget)
 
 		// Response Message for user "HTTP = 200"
 		ctx.IndentedJSON(http.StatusCreated, IncomingRequest)
